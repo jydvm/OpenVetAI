@@ -1,0 +1,71 @@
+{
+  "name": "vetscribe",
+  "version": "1.0.0",
+  "description": "Veterinary Voice-to-SOAP Note Generator - A web application for converting voice recordings to structured SOAP notes using local LLMs",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 3000 -c-1 --cors",
+    "dev": "npx http-server . -p 3000 -c-1 --cors -o",
+    "test": "npx jest",
+    "test:watch": "npx jest --watch",
+    "test:coverage": "npx jest --coverage",
+    "lint": "npx eslint *.js",
+    "lint:fix": "npx eslint *.js --fix",
+    "format": "npx prettier --write *.js *.html *.css",
+    "build": "echo 'No build step required for vanilla JS app'",
+    "serve": "npm run start"
+  },
+  "keywords": [
+    "veterinary",
+    "voice-to-text",
+    "soap-notes",
+    "llm",
+    "medical-records",
+    "transcription",
+    "healthcare"
+  ],
+  "author": "OpenScribe",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/vetscribe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/vetscribe/issues"
+  },
+  "homepage": "https://github.com/your-username/vetscribe#readme",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "http-server": "^14.1.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "prettier": "^3.2.5"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1%",
+    "not dead"
+  ],
+  "jest": {
+    "testEnvironment": "jsdom",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "*.js",
+      "!node_modules/**",
+      "!tests/**"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ]
+  }
+}

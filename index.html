@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="OpenVetAI">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="description" content="Open-Source AI-Powered Veterinary SOAP Note Generator - Record conversations and generate structured SOAP notes with AI">
+    <meta name="author" content="OpenVetAI">
+    <title>OpenVetAI - AI-Powered SOAP Notes</title>
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts for clean, readable typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- PWA meta tags for mobile app-like experience -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="OpenVetAI">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+    <!-- Skip link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Main Application Container -->
+    <div id="app" class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">
+                    <span class="title-icon">🤖</span>
+                    OpenVetAI
+                </h1>
+                <div class="connection-status" id="connectionStatus">
+                    <span class="status-indicator" id="statusIndicator"></span>
+                    <span class="status-text" id="statusText">Connecting...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content" id="main-content">
+            <!-- Traditional Navigation -->
+            <nav class="tab-navigation" id="tabNavigation">
+                <button class="tab-button active" data-tab="record" id="recordTab">
+                    Record
+                </button>
+                <button class="tab-button" data-tab="notes" id="notesTab">
+                    Notes
+                </button>
+                <button class="tab-button" data-tab="history" id="historyTab">
+                    History
+                </button>
+                <button class="tab-button" data-tab="settings" id="settingsTab">
+                    Settings
+                </button>
+            </nav>
+
+            <!-- Tab Content Panels -->
+            <div class="tab-content">
+                <!-- Recording Tab -->
+                <div class="tab-panel active" id="recordPanel">
+                    <div class="recording-section">
+                        <div class="recording-controls">
+                            <div class="main-record-control">
+                                <button class="record-button" id="recordButton">
+                                    <span class="record-circle"></span>
+                                </button>
+                                <div class="record-label" id="recordLabel">Record</div>
+                            </div>
+
+                            <div class="recording-info">
+                                <div class="recording-timer" id="recordingTimer">00:00</div>
+                                <div class="recording-status" id="recordingStatus">Ready to record</div>
+                            </div>
+
+                            <div class="secondary-controls" id="secondaryControls">
+                                <button class="control-button pause-button" id="pauseButton" disabled>
+                                    <span class="control-icon">⏸️</span>
+                                    <span class="control-text">Pause</span>
+                                </button>
+                                <button class="control-button stop-button" id="stopButton" disabled>
+                                    <span class="control-icon">⏹️</span>
+                                    <span class="control-text">Stop</span>
+                                </button>
+                            </div>
+
+                            <div class="volume-indicator" id="volumeIndicator">
+                                <div class="volume-label">Audio Level</div>
+                                <div class="volume-bars" id="volumeBars">
+                                    <div class="volume-bar"></div>
+                                    <div class="volume-bar"></div>
+                                    <div class="volume-bar"></div>
+                                    <div class="volume-bar"></div>
+                                    <div class="volume-bar"></div>
+                                    <div class="volume-bar"></div>
+                                    <div class="volume-bar"></div>
+                                    <div class="volume-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOAP Notes Tab -->
+                <div class="tab-panel" id="notesPanel">
+                    <div class="soap-notes-section">
+                        <div class="soap-header">
+                            <h3>Generated SOAP Notes</h3>
+                            <button class="generate-button" id="generateButton" disabled>
+                                Generate SOAP Notes
+                            </button>
+                        </div>
+
+                        <div class="soap-content" id="soapContent">
+                            <textarea class="soap-textarea" id="soapTextarea" placeholder="Record a conversation and generate SOAP notes to see them here...
+
+The SOAP notes will be formatted as:
+
+SUBJECTIVE:
+[Patient history and owner observations]
+
+OBJECTIVE:
+[Physical examination findings]
+
+ASSESSMENT:
+[Diagnosis and clinical assessment]
+
+PLAN:
+[Treatment plan and recommendations]" readonly></textarea>
+                        </div>
+
+                        <div class="soap-actions">
+                            <button class="action-button secondary" id="copyButton" disabled>
+                                Copy to Clipboard
+                            </button>
+                            <button class="action-button secondary" id="editButton" disabled>
+                                Edit Notes
+                            </button>
+                            <button class="action-button primary" id="saveButton" disabled>
+                                Save Notes
+                            </button>
+                            <button class="action-button secondary" id="exportButton" disabled>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History Tab -->
+                <div class="tab-panel" id="historyPanel">
+                    <div class="history-section">
+                        <div class="history-header">
+                            <h3>Saved Notes</h3>
+                            <div class="search-container">
+                                <input type="search" id="searchInput" placeholder="Search notes..." class="search-input">
+                            </div>
+                        </div>
+                        
+                        <div class="history-list" id="historyList">
+                            <div class="empty-state">
+                                <p>No saved notes yet. Start by recording a conversation!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-panel" id="settingsPanel">
+                    <div class="settings-section">
+                        <h3>Settings</h3>
+                        
+                        <div class="setting-group">
+                            <h4>LLM Connection</h4>
+                            <div class="setting-item">
+                                <label for="llmEndpoint">LM Studio Endpoint:</label>
+                                <input type="url" id="llmEndpoint" placeholder="http://100.x.x.x:1234" class="setting-input">
+                                <button class="test-connection-button" id="testConnectionButton">Test Connection</button>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <h4>Audio Settings</h4>
+                            <div class="setting-item">
+                                <label for="audioQuality">Audio Quality:</label>
+                                <select id="audioQuality" class="setting-select">
+                                    <option value="high">High Quality</option>
+                                    <option value="medium" selected>Medium Quality</option>
+                                    <option value="low">Low Quality</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <h4>Privacy</h4>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="autoDelete" class="setting-checkbox">
+                                    Auto-delete recordings after SOAP generation
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+            <p class="loading-text" id="loadingText">Processing...</p>
+        </div>
+
+        <!-- Keyboard Navigation Hints -->
+        <div class="keyboard-hint" id="keyboardHint">
+            <div>Keyboard shortcuts: Ctrl+1-4 (tabs), Ctrl+R (record), Ctrl+G (generate), Ctrl+C (copy), Esc (cancel)</div>
+        </div>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script src="utils.js"></script>
+    <script src="storage.js"></script>
+    <script src="audio-recorder.js"></script>
+    <script src="transcription.js"></script>
+    <script src="llm-connector.js"></script>
+    <script src="soap-templates.js"></script>
+    <script src="soap-formatter.js"></script>
+    <script src="encryption.js"></script>
+    <script src="secure-communication.js"></script>
+    <script src="data-validator.js"></script>
+    <script src="privacy-manager.js"></script>
+    <script src="secure-export.js"></script>
+    <script src="security-test-suite.js"></script>
+    <script src="error-handler.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
