@@ -509,6 +509,23 @@ const LLMConnector = {
      * Get models from specific endpoint
      */
     async getModelsFromEndpoint(endpoint) {
+        // Try Ollama API first
+        try {
+            const response = await fetch(`${endpoint}/api/tags`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Convert Ollama format to OpenAI format
+                return data.models || [];
+            }
+        } catch (error) {
+            console.log('Ollama API failed, trying OpenAI format...');
+        }
+
+        // Fallback to OpenAI format (LM Studio)
         const response = await fetch(`${endpoint}/v1/models`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
@@ -652,11 +669,21 @@ const LLMConnector = {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-            const response = await fetch(`${this.currentEndpoint}/v1/models`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                signal: controller.signal
-            });
+            // Try Ollama API first, then fallback to OpenAI format
+            let response;
+            try {
+                response = await fetch(`${this.currentEndpoint}/api/tags`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: controller.signal
+                });
+            } catch (error) {
+                response = await fetch(`${this.currentEndpoint}/v1/models`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: controller.signal
+                });
+            }
 
             clearTimeout(timeoutId);
 
@@ -667,8 +694,9 @@ const LLMConnector = {
             // Validate response content
             const data = await response.json();
 
-            // Check if models are available
-            const hasModels = data.data && Array.isArray(data.data) && data.data.length > 0;
+            // Check if models are available (support both Ollama and OpenAI formats)
+            const hasModels = (data.models && Array.isArray(data.models) && data.models.length > 0) ||
+                             (data.data && Array.isArray(data.data) && data.data.length > 0);
 
             return hasModels;
 
@@ -1109,19 +1137,29 @@ const LLMConnector = {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), timeout);
             
-            const response = await fetch(`${endpoint}/v1/models`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                signal: controller.signal
-            });
+            // Try Ollama API first, then fallback to OpenAI format
+            let response;
+            try {
+                response = await fetch(`${endpoint}/api/tags`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: controller.signal
+                });
+                if (!response.ok) throw new Error('Ollama API failed');
+            } catch (error) {
+                response = await fetch(`${endpoint}/v1/models`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: controller.signal
+                });
+            }
             
             clearTimeout(timeoutId);
             
             if (response.ok) {
                 const data = await response.json();
-                console.log(`✅ Endpoint ${endpoint} is working, models:`, data.data?.length || 0);
+                const modelCount = data.models?.length || data.data?.length || 0;
+                console.log(`✅ Endpoint ${endpoint} is working, models:`, modelCount);
                 return true;
             } else {
                 console.log(`❌ Endpoint ${endpoint} returned status:`, response.status);
@@ -1195,19 +1233,34 @@ const LLMConnector = {
                 throw new Error('No endpoint configured');
             }
             
-            const response = await fetch(`${this.currentEndpoint}/v1/models`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
+            // Try Ollama API first
+            let response, data, models;
+            try {
+                response = await fetch(`${this.currentEndpoint}/api/tags`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    data = await response.json();
+                    models = data.models || [];
+                } else {
+                    throw new Error('Ollama API failed');
                 }
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            } catch (error) {
+                // Fallback to OpenAI format
+                response = await fetch(`${this.currentEndpoint}/v1/models`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                data = await response.json();
+                models = data.data || [];
             }
-            
-            const data = await response.json();
-            const models = data.data || [];
             
             console.log('📋 Available models:', models.map(m => m.id));
             
