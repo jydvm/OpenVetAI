@@ -9,8 +9,8 @@ This guide solves **90% of common OpenVetAI issues** in under 5 minutes. Perfect
 ### **"Nothing is working at all"**
 1. **Refresh the page** (Ctrl+F5 or Cmd+Shift+R)
 2. **Check internet connection**
-3. **Verify home PC is on** and LM Studio is running
-4. **Test with:** `http://localhost:1234/v1/models` in browser
+3. **Verify home PC is on** and Ollama is running
+4. **Test with:** `http://localhost:11434/api/tags` in browser
 
 ### **"Can't record anything"**
 1. **Grant microphone permission** when browser asks
@@ -26,7 +26,7 @@ This guide solves **90% of common OpenVetAI issues** in under 5 minutes. Perfect
 
 ## 🔧 Connection Issues
 
-### **"Can't connect to LM Studio"**
+### **"Can't connect to Ollama"**
 
 #### **Symptoms:**
 - Red connection status
@@ -34,26 +34,25 @@ This guide solves **90% of common OpenVetAI issues** in under 5 minutes. Perfect
 - Settings test shows ❌
 
 #### **Solutions:**
-1. **Check LM Studio is running:**
-   - Open LM Studio on home PC
-   - Go to "Local Server" tab
-   - Verify server is started
-   - Should show "Server running on http://localhost:1234"
+1. **Check Ollama is running:**
+   - Open Command Prompt on home PC
+   - Run: `ollama serve`
+   - Should show "Listening on 0.0.0.0:11434"
 
 2. **Verify endpoint URL:**
-   - Local use: `http://localhost:1234/v1`
-   - Remote use: `http://[YOUR-IP]:1234/v1`
-   - Tailscale: `http://[TAILSCALE-IP]:1234/v1`
+   - Local use: `http://localhost:11434/v1`
+   - Remote use: `http://[YOUR-IP]:11434/v1`
+   - Tailscale: `http://[TAILSCALE-IP]:11434/v1`
 
 3. **Test in browser first:**
-   - Go to: `http://[YOUR-ENDPOINT]/v1/models`
-   - Should show JSON data about your model
-   - If this fails, LM Studio isn't accessible
+   - Go to: `http://[YOUR-ENDPOINT]/api/tags`
+   - Should show JSON data about your models
+   - If this fails, Ollama isn't accessible
 
 4. **Check firewall:**
-   - Windows might be blocking LM Studio
-   - Allow LM Studio through Windows Firewall
-   - Try running LM Studio as Administrator
+   - Windows might be blocking Ollama
+   - Allow Ollama through Windows Firewall
+   - Check OLLAMA_HOST environment variable
 
 ### **"Connection works at home but not at clinic"**
 

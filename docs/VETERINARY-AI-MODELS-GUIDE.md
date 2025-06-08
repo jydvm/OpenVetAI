@@ -2,7 +2,7 @@
 
 ## 🎯 Choosing the Right AI Model for Your Practice
 
-Not all AI models are created equal for veterinary use. This guide helps you choose the **best AI model** for generating accurate, professional SOAP notes in your veterinary practice.
+Not all AI models are created equal for veterinary use. This guide helps you choose the **best AI model** for generating accurate, professional SOAP notes in your veterinary practice. All models work with Ollama and are optimized for veterinary documentation.
 
 ## 🏆 Top Recommended Models for Veterinary Use
 
@@ -16,12 +16,16 @@ Not all AI models are created equal for veterinary use. This guide helps you cho
 - ✅ **Reasonable size** - works on most modern PCs
 - ✅ **Professional tone** - appropriate for medical records
 
+#### **Download with Ollama:**
+```bash
+ollama pull llama3:8b
+```
+
 #### **Technical Specs:**
 - **Model Size:** ~5GB download
 - **RAM Required:** 8GB minimum, 16GB recommended
 - **Speed:** Fast on most PCs (with/without GPU)
 - **Quality:** Excellent for veterinary SOAP notes
-- **Best Version:** `Meta-Llama-3.1-8B-Instruct-GGUF` (Q4_K_M)
 
 #### **Sample SOAP Note Quality:**
 ```
@@ -50,12 +54,16 @@ P: Continue current diet and exercise. Recommend dental cleaning within 6 months
 - ✅ **Low memory** - runs on 4GB+ RAM
 - ✅ **Microsoft-trained** - good instruction following
 
+#### **Download with Ollama:**
+```bash
+ollama pull phi3:mini
+```
+
 #### **Technical Specs:**
 - **Model Size:** ~2GB download
 - **RAM Required:** 4GB minimum, 8GB recommended
 - **Speed:** Very fast on all PCs
 - **Quality:** Good for straightforward cases
-- **Best Version:** `Phi-3-mini-4k-instruct-GGUF` (Q4_K_M)
 
 #### **Best For:**
 - Older PCs with limited RAM
@@ -189,13 +197,12 @@ Many practices benefit from having **multiple models** available:
 2. **Llama 3.1 8B** for standard sick visits
 3. **Llama 3.1 70B** for complex cases (if hardware allows)
 
-### **How to Switch Models in LM Studio:**
-1. **Stop current server** in LM Studio
-2. **Go to Chat tab**
-3. **Select different model**
-4. **Load new model**
-5. **Restart server** with new model
-6. **Update VetScribe** if endpoint changed
+### **How to Switch Models in Ollama:**
+1. **Download new model:** `ollama pull [model-name]`
+2. **Stop current server:** Ctrl+C in terminal
+3. **Start with new model:** `ollama run [model-name]`
+4. **Or serve all models:** `ollama serve` (auto-detects)
+5. **Update OpenVetAI** if needed
 
 ## 🚀 Getting Started Recommendations
 
@@ -233,7 +240,7 @@ Many practices benefit from having **multiple models** available:
 - **Specialized medical models** (as they become available)
 
 ### **Model Updates:**
-- **Check LM Studio regularly** for new model releases
+- **Check Ollama library regularly** for new model releases: `ollama list`
 - **Test new models** with your typical cases
 - **Upgrade when quality** significantly improves
 

@@ -18,7 +18,7 @@ Transform your spoken consultations into professional SOAP notes automatically u
 ### Prerequisites
 
 1. **Node.js** (v16 or higher) - for development tools
-2. **LM Studio** - for running local LLMs
+2. **Ollama** - for running local LLMs
 3. **Tailscale** (optional) - for remote access to home PC
 
 ### 🚀 Quick Deployment (Recommended)
@@ -45,27 +45,28 @@ cd vetscribe
 
 ## 🔧 Setup Guide
 
-### 1. LM Studio Setup
+### 1. Ollama Setup
 
-1. Download and install [LM Studio](https://lmstudio.ai/)
-2. Download a recommended model (e.g., Llama 2 7B or similar)
-3. Start the local server in LM Studio
-4. Note the server URL (typically `http://localhost:1234`)
+1. Download and install [Ollama](https://ollama.ai/)
+2. Download a recommended model: `ollama pull mistral:7b`
+3. Configure for network access: Set `OLLAMA_HOST=0.0.0.0:11434`
+4. Start the server: `ollama serve`
+5. Note the server URL (typically `http://localhost:11434`)
 
 ### 2. Tailscale Setup (Optional - for remote access)
 
 1. Install [Tailscale](https://tailscale.com/) on both devices
 2. Sign up and connect both devices to your Tailscale network
 3. Note your home PC's Tailscale IP address
-4. Use this IP in the VetScribe settings instead of localhost
+4. Use this IP in the OpenVetAI settings instead of localhost
 
-### 3. VetScribe Configuration
+### 3. OpenVetAI Configuration
 
-1. Open VetScribe in your browser
+1. Open OpenVetAI in your browser
 2. Go to the Settings tab
-3. Enter your LM Studio endpoint:
-   - Local: `http://localhost:1234`
-   - Remote via Tailscale: `http://100.x.x.x:1234`
+3. Enter your Ollama endpoint:
+   - Local: `http://localhost:11434/v1`
+   - Remote via Tailscale: `http://100.x.x.x:11434/v1`
 4. Test the connection
 
 ## 📱 Usage
@@ -152,8 +153,8 @@ npm run test:coverage
 - Ensure HTTPS or localhost for microphone access
 
 **LLM connection failed:**
-- Verify LM Studio is running and accessible
-- Check firewall settings
+- Verify Ollama is running and accessible
+- Check firewall settings and OLLAMA_HOST configuration
 - Confirm Tailscale connection if using remote access
 
 **Poor transcription quality:**

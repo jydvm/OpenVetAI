@@ -7,7 +7,7 @@ Welcome to OpenVetAI - your open-source AI-powered SOAP note generator! This doc
 ## 📚 Documentation Overview
 
 ### **🚀 Quick Start (Read These First)**
-1. **[LM Studio Setup Guide](LM-STUDIO-SETUP-GUIDE.md)** - Install and configure AI on your home PC
+1. **[Ollama Setup Guide](OLLAMA-SETUP-GUIDE.md)** - Install and configure AI on your home PC
 2. **[Tailscale Setup Guide](TAILSCALE-SETUP-GUIDE.md)** - Secure connection from clinic to home
 3. **[OpenVetAI User Manual](OPENVETAI-USER-MANUAL.md)** - How to use OpenVetAI effectively
 
@@ -18,9 +18,9 @@ Welcome to OpenVetAI - your open-source AI-powered SOAP note generator! This doc
 ## ⚡ 30-Minute Setup Checklist
 
 ### **Step 1: Home PC Setup (15 minutes)**
-- [ ] Download and install LM Studio
-- [ ] Download Llama 3.1 8B model (recommended)
-- [ ] Configure LM Studio server settings
+- [ ] Download and install Ollama
+- [ ] Download Mistral 7B model (recommended): `ollama pull mistral:7b`
+- [ ] Configure Ollama for network access: `OLLAMA_HOST=0.0.0.0:11434`
 - [ ] Test local connection
 
 ### **Step 2: Secure Connection (10 minutes)**
@@ -117,14 +117,14 @@ Welcome to OpenVetAI - your open-source AI-powered SOAP note generator! This doc
 ## 🚨 Quick Troubleshooting
 
 ### **Most Common Issues:**
-1. **Can't connect** → Check LM Studio is running and Tailscale is connected
+1. **Can't connect** → Check Ollama is running and Tailscale is connected
 2. **Poor transcription** → Speak more clearly, reduce background noise
 3. **Slow performance** → Try smaller AI model or check internet connection
 4. **Microphone issues** → Grant browser permissions, test hardware
 
 ### **Emergency Fixes:**
 - **Refresh the page** (Ctrl+F5)
-- **Restart LM Studio** on home PC
+- **Restart Ollama** on home PC: `ollama serve`
 - **Reconnect Tailscale** on both devices
 - **Try different browser** if issues persist
 
@@ -160,9 +160,9 @@ Welcome to OpenVetAI - your open-source AI-powered SOAP note generator! This doc
 ## 🚀 Ready to Get Started?
 
 ### **Your Next Steps:**
-1. **Start with [LM Studio Setup Guide](LM-STUDIO-SETUP-GUIDE.md)** - get AI running on your home PC
+1. **Start with [Ollama Setup Guide](OLLAMA-SETUP-GUIDE.md)** - get AI running on your home PC
 2. **Follow [Tailscale Setup Guide](TAILSCALE-SETUP-GUIDE.md)** - secure connection to clinic
-3. **Read [User Manual](VETSCRIBE-USER-MANUAL.md)** - learn how to use VetScribe effectively
+3. **Read [User Manual](OPENVETAI-USER-MANUAL.md)** - learn how to use OpenVetAI effectively
 4. **Practice with test cases** - build confidence before using with real patients
 5. **Gradually integrate** into your daily workflow
 

@@ -15,7 +15,7 @@ Tailscale creates a **secure, private network** between your clinic devices and 
 ## 🚀 Quick Setup (15 Minutes Total)
 
 ### **What You'll Install:**
-1. **Tailscale on your home PC** (where LM Studio runs)
+1. **Tailscale on your home PC** (where Ollama runs)
 2. **Tailscale on your clinic devices** (laptop, tablet, phone)
 3. **Connect them securely** with one click
 
