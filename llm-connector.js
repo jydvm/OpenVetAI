@@ -15,7 +15,7 @@ const LLMConnector = {
     
     // Configuration
     config: {
-        defaultPort: 1234,
+        defaultPort: 11434,
         timeout: 30000, // 30 seconds
         retryAttempts: 3,
         retryDelay: 2000, // 2 seconds
@@ -188,7 +188,7 @@ const LLMConnector = {
         console.log('🔍 Scanning common Tailscale IP ranges...');
 
         const endpoints = [];
-        const commonPorts = [1234, 8080, 8000, 3000, 5000];
+        const commonPorts = [11434, 1234, 8080, 8000, 3000, 5000];
 
         // Common Tailscale IP patterns
         const ipPatterns = [
@@ -222,7 +222,7 @@ const LLMConnector = {
         console.log('🔍 Discovering from hostname patterns...');
 
         const endpoints = [];
-        const commonPorts = [1234, 8080, 8000];
+        const commonPorts = [11434, 1234, 8080, 8000];
 
         // Common hostname patterns for Tailscale
         const hostnames = [
@@ -367,10 +367,12 @@ const LLMConnector = {
         // Priority order: history > localhost > common IPs
         const priorityEndpoints = [
             ...await this.discoverFromLocalStorage(),
+            'http://localhost:11434/v1',
+            'http://127.0.0.1:11434/v1',
+            'http://100.64.0.1:11434/v1',
+            'http://100.64.0.2:11434/v1',
             'http://localhost:1234',
-            'http://127.0.0.1:1234',
-            'http://100.64.0.1:1234',
-            'http://100.64.0.2:1234'
+            'http://127.0.0.1:1234'
         ];
 
         for (const endpoint of priorityEndpoints) {

@@ -1309,9 +1309,9 @@ async function testLLMConnection() {
             'LLM endpoint not configured. Please set up your connection in Settings.',
             [
                 'Go to the Settings tab',
-                'Enter your LM Studio endpoint URL (e.g., http://100.x.x.x:1234)',
+                'Enter your Ollama endpoint URL (e.g., http://100.x.x.x:11434/v1)',
                 'Click Test Connection to verify',
-                'Ensure LM Studio is running on your home PC with Tailscale'
+                'Ensure Ollama is running on your home PC with Tailscale'
             ]
         );
         return;
@@ -1622,8 +1622,8 @@ function updateConnectionStatus(status, message = '', details = {}) {
  */
 function getDefaultStatusMessage(status) {
     const messages = {
-        'connected': 'Connected to LM Studio',
-        'connecting': 'Connecting to LM Studio...',
+        'connected': 'Connected to Ollama',
+        'connecting': 'Connecting to Ollama...',
         'reconnecting': 'Reconnecting...',
         'disconnected': 'Not connected',
         'error': 'Connection error',
@@ -2506,11 +2506,11 @@ async function generateSOAPNotes() {
             {
                 technicalDetails: error.message,
                 suggestions: [
-                    'Verify that LM Studio is running on your home PC',
+                    'Verify that Ollama is running on your home PC',
                     'Check that the LLM endpoint URL is correct in Settings',
                     'Ensure your Tailscale connection is active',
                     'Try testing the connection using the Test Connection button',
-                    'Check that the AI model is loaded and running in LM Studio',
+                    'Check that the AI model is loaded: ollama list',
                     'Verify your transcript contains sufficient content for SOAP generation'
                 ],
                 retryFunction: () => generateSOAPNotes(),
@@ -2622,17 +2622,17 @@ function handleLLMError(error) {
     console.error('❌ Handling LLM error:', error);
 
     let errorMessage = 'LLM connection failed.';
-    let userAction = 'Please check your LM Studio connection.';
+    let userAction = 'Please check your Ollama connection.';
 
     if (error.message.includes('timeout')) {
         errorMessage = 'LLM request timed out.';
         userAction = 'The model may be processing. Please try again.';
     } else if (error.message.includes('404')) {
-        errorMessage = 'LM Studio endpoint not found.';
-        userAction = 'Please check your LM Studio is running and accessible.';
+        errorMessage = 'Ollama endpoint not found.';
+        userAction = 'Please check your Ollama is running and accessible.';
     } else if (error.message.includes('No endpoint configured')) {
         errorMessage = 'No LLM endpoint configured.';
-        userAction = 'Please configure your LM Studio connection in settings.';
+        userAction = 'Please configure your Ollama connection in settings.';
     } else {
         errorMessage = error.message || 'Unknown LLM error.';
     }
@@ -2903,15 +2903,15 @@ async function testLLMConnection() {
             throw new Error('LLM Connector not available');
         }
 
-        showLoading('Testing LM Studio connection...');
+        showLoading('Testing Ollama connection...');
 
         const success = await LLMConnector.testConnection();
 
         hideLoading();
 
         if (success) {
-            updateConnectionStatus('connected', 'LM Studio connection successful');
-            showSuccess('LM Studio connection test successful!');
+            updateConnectionStatus('connected', 'Ollama connection successful');
+            showSuccess('Ollama connection test successful!');
         }
 
         return success;
@@ -2920,7 +2920,7 @@ async function testLLMConnection() {
         console.error('❌ LLM connection test failed:', error);
 
         hideLoading();
-        updateConnectionStatus('error', 'LM Studio connection failed');
+        updateConnectionStatus('error', 'Ollama connection failed');
         showError(`Connection test failed: ${error.message}`);
 
         return false;
