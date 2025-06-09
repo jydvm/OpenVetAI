@@ -596,6 +596,12 @@ async function loadSettings() {
             // Apply settings to UI
             if (DOMElements.llmEndpoint) {
                 DOMElements.llmEndpoint.value = AppState.settings.llmEndpoint || '';
+
+                // Update LLM connector with saved endpoint
+                if (typeof LLMConnector !== 'undefined' && AppState.settings.llmEndpoint) {
+                    console.log('🔗 Setting LLM endpoint from saved settings:', AppState.settings.llmEndpoint);
+                    LLMConnector.setEndpoint(AppState.settings.llmEndpoint);
+                }
             }
             if (DOMElements.audioQuality) {
                 DOMElements.audioQuality.value = AppState.settings.audioQuality || 'medium';
@@ -1833,6 +1839,15 @@ function handleTestConnection() {
 function handleSettingsChange() {
     console.log('⚙️ Settings changed');
     saveSettings();
+
+    // Update LLM connector with new endpoint
+    if (typeof LLMConnector !== 'undefined' && DOMElements.llmEndpoint) {
+        const endpoint = DOMElements.llmEndpoint.value.trim();
+        if (endpoint) {
+            console.log('🔗 Updating LLM endpoint to:', endpoint);
+            LLMConnector.setEndpoint(endpoint);
+        }
+    }
 }
 
 function handleSearch() {
@@ -3211,9 +3226,9 @@ async function handleTestConnection() {
  * Show test connection options (simplified for now)
  */
 async function showTestConnectionOptions() {
-    // For now, just return 'detailed' for comprehensive testing
-    // In a full implementation, this could show a modal with options
-    return 'detailed';
+    // Return 'basic' to test the user-specified endpoint
+    // 'detailed' runs auto-discovery which tests multiple ports
+    return 'basic';
 }
 
 /**
