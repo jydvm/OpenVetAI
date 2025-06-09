@@ -1565,7 +1565,7 @@ SOAP NOTES:`;
         console.log(`📤 [${requestId}] Starting completion request...`);
 
         // Prepare request with validation
-        const requestBody = this.prepareRequestBody(prompt, options);
+        const requestBody = await this.prepareRequestBody(prompt, options);
 
         // Validate request before sending
         this.validateRequest(requestBody);
@@ -1605,11 +1605,41 @@ SOAP NOTES:`;
     },
 
     /**
+     * Get the correct model name for the request
+     */
+    async getModelName(requestedModel) {
+        // If a specific model is requested, use it
+        if (requestedModel) {
+            return requestedModel;
+        }
+
+        // If we have a configured default model, use it
+        if (this.config.defaultModel && this.config.defaultModel !== 'local-model') {
+            return this.config.defaultModel;
+        }
+
+        // Try to get the first available model from Ollama
+        try {
+            const models = await this.getAvailableModels();
+            if (models && models.length > 0) {
+                const modelName = models[0].name || models[0].id || models[0];
+                console.log(`🤖 Using first available model: ${modelName}`);
+                return modelName;
+            }
+        } catch (error) {
+            console.warn('⚠️ Could not get available models:', error.message);
+        }
+
+        // Fallback to common Ollama model names
+        return 'llama3.1:8b';
+    },
+
+    /**
      * Prepare and validate request body
      */
-    prepareRequestBody(prompt, options = {}) {
+    async prepareRequestBody(prompt, options = {}) {
         const requestBody = {
-            model: options.model || this.config.defaultModel || 'local-model',
+            model: await this.getModelName(options.model),
             messages: this.prepareMessages(prompt, options),
             max_tokens: this.validateMaxTokens(options.maxTokens || this.config.maxTokens),
             temperature: this.validateTemperature(options.temperature || this.config.temperature),
@@ -1763,16 +1793,48 @@ Remember: These notes will be used for patient care and medical records.`;
             });
         }
 
-        const response = await fetch(`${this.currentEndpoint}/v1/chat/completions`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'User-Agent': 'VetScribe/1.0'
-            },
-            body: JSON.stringify(requestBody),
-            signal: controller.signal
-        });
+        // Try Ollama API first, then fallback to OpenAI format
+        let response;
+        let isOllamaAPI = false;
+
+        try {
+            // Ollama native API format
+            const ollamaBody = {
+                model: requestBody.model,
+                prompt: requestBody.messages[requestBody.messages.length - 1].content,
+                stream: false
+            };
+
+            response = await fetch(`${this.currentEndpoint}/api/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'User-Agent': 'OpenVetAI/1.0'
+                },
+                body: JSON.stringify(ollamaBody),
+                signal: controller.signal
+            });
+
+            if (response.ok) {
+                isOllamaAPI = true;
+            } else {
+                throw new Error('Ollama API failed');
+            }
+        } catch (error) {
+            // Fallback to OpenAI format (LM Studio)
+            response = await fetch(`${this.currentEndpoint}/v1/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'User-Agent': 'OpenVetAI/1.0'
+                },
+                body: JSON.stringify(requestBody),
+                signal: controller.signal
+            });
+            isOllamaAPI = false;
+        }
 
         // Report progress
         if (progressCallback) {
@@ -1861,9 +1923,18 @@ Remember: These notes will be used for patient care and medical records.`;
      */
     validateResponseStructure(data) {
         if (!data) {
-            throw new Error('Empty response from LM Studio');
+            throw new Error('Empty response from AI service');
         }
 
+        // Handle Ollama response format
+        if (data.response !== undefined) {
+            if (typeof data.response !== 'string') {
+                throw new Error('Invalid Ollama response: response field must be a string');
+            }
+            return; // Valid Ollama response
+        }
+
+        // Handle OpenAI/LM Studio response format
         if (!data.choices || !Array.isArray(data.choices) || data.choices.length === 0) {
             throw new Error('Invalid response structure: missing choices array');
         }
@@ -1877,7 +1948,17 @@ Remember: These notes will be used for patient care and medical records.`;
      * Extract content from response
      */
     extractContent(data) {
-        return data.choices[0].message.content;
+        // Handle Ollama response format
+        if (data.response) {
+            return data.response;
+        }
+
+        // Handle OpenAI/LM Studio response format
+        if (data.choices && data.choices[0] && data.choices[0].message) {
+            return data.choices[0].message.content;
+        }
+
+        throw new Error('Unknown response format');
     },
 
     /**
