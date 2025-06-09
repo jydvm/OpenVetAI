@@ -1139,19 +1139,32 @@ const LLMConnector = {
             
             // Try Ollama API first, then fallback to OpenAI format
             let response;
+            let isOllamaAPI = false;
+
             try {
                 response = await fetch(`${endpoint}/api/tags`, {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' },
                     signal: controller.signal
                 });
-                if (!response.ok) throw new Error('Ollama API failed');
+
+                if (response.ok) {
+                    isOllamaAPI = true;
+                } else {
+                    throw new Error('Ollama API failed');
+                }
             } catch (error) {
-                response = await fetch(`${endpoint}/v1/models`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                    signal: controller.signal
-                });
+                // Fallback to OpenAI format (LM Studio)
+                try {
+                    response = await fetch(`${endpoint}/v1/models`, {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' },
+                        signal: controller.signal
+                    });
+                    isOllamaAPI = false;
+                } catch (fallbackError) {
+                    throw new Error(`Both Ollama and OpenAI API failed: ${error.message}, ${fallbackError.message}`);
+                }
             }
             
             clearTimeout(timeoutId);
@@ -1159,7 +1172,8 @@ const LLMConnector = {
             if (response.ok) {
                 const data = await response.json();
                 const modelCount = data.models?.length || data.data?.length || 0;
-                console.log(`✅ Endpoint ${endpoint} is working, models:`, modelCount);
+                const apiType = isOllamaAPI ? 'Ollama' : 'OpenAI';
+                console.log(`✅ Endpoint ${endpoint} is working (${apiType}), models:`, modelCount);
                 return true;
             } else {
                 console.log(`❌ Endpoint ${endpoint} returned status:`, response.status);
@@ -1171,6 +1185,11 @@ const LLMConnector = {
                 console.log(`⏱️ Endpoint ${endpoint} timed out`);
             } else {
                 console.log(`❌ Endpoint ${endpoint} error:`, error.message);
+                console.log(`❌ Error details:`, {
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack?.split('\n')[0]
+                });
             }
             return false;
         }
