@@ -134,10 +134,11 @@ const Transcription = {
         console.log('🔍 Speech recognition support:', this.support);
 
         // Browser-specific warnings and fallback recommendations
-        if (this.support.browser.name === 'Firefox') {
+        const browserName = this.support.browser ? this.support.browser.name : 'Unknown';
+        if (browserName === 'Firefox') {
             console.warn('⚠️ Firefox has limited Web Speech API support');
             this.recommendFallbacks(['manual', 'fileUpload']);
-        } else if (this.support.browser.name === 'Safari') {
+        } else if (browserName === 'Safari') {
             console.warn('⚠️ Safari Web Speech API support may be limited');
             this.recommendFallbacks(['manual', 'fileUpload']);
         } else if (!this.support.speechRecognition) {
@@ -452,7 +453,7 @@ const Transcription = {
      * Check if a fallback method is recommended for current browser
      */
     isRecommendedFallback(methodKey) {
-        const browser = this.support.browser.name;
+        const browser = this.support.browser ? this.support.browser.name : 'Unknown';
 
         // Recommend manual for all unsupported browsers
         if (methodKey === 'manual') {
@@ -1552,6 +1553,11 @@ const Transcription = {
      * Get browser compatibility information
      */
     getCompatibilityInfo() {
+        // Ensure browser detection has run
+        if (!this.support.browser) {
+            this.support.browser = this.detectBrowser();
+        }
+
         const compatibility = {
             supported: this.support.speechRecognition,
             browser: this.support.browser,
@@ -1566,7 +1572,8 @@ const Transcription = {
         };
 
         // Browser-specific limitations and recommendations
-        switch (this.support.browser.name) {
+        const browserName = this.support.browser ? this.support.browser.name : 'Unknown';
+        switch (browserName) {
             case 'Chrome':
                 compatibility.recommendations.push('Chrome has excellent Web Speech API support');
                 break;
@@ -1586,7 +1593,7 @@ const Transcription = {
                 compatibility.recommendations.push('Use Chrome, Firefox, or Edge for best results');
         }
 
-        if (this.support.browser.mobile) {
+        if (this.support.browser && this.support.browser.mobile) {
             compatibility.limitations.push('Mobile browsers may have reduced speech recognition capabilities');
             compatibility.recommendations.push('Test speech recognition on target mobile devices');
         }
