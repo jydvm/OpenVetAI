@@ -1,6 +1,6 @@
 /**
- * VetScribe - LLM Connector Module
- * Handles communication with LM Studio API over Tailscale for SOAP note generation
+ * OpenVetAI - LLM Connector Module
+ * Handles communication with Ollama API over Tailscale for SOAP note generation
  */
 
 const LLMConnector = {
@@ -100,7 +100,7 @@ const LLMConnector = {
      */
     loadConfiguration() {
         try {
-            const saved = localStorage.getItem('vetscribe-llm-config');
+            const saved = localStorage.getItem('openvetai-llm-config');
             if (saved) {
                 const config = JSON.parse(saved);
                 this.currentEndpoint = config.endpoint;
@@ -121,7 +121,7 @@ const LLMConnector = {
                 endpoint: this.currentEndpoint,
                 settings: this.config
             };
-            localStorage.setItem('vetscribe-llm-config', JSON.stringify(config));
+            localStorage.setItem('openvetai-llm-config', JSON.stringify(config));
             console.log('💾 LLM configuration saved');
         } catch (error) {
             console.warn('⚠️ Failed to save LLM configuration:', error);
@@ -168,7 +168,7 @@ const LLMConnector = {
         const endpoints = [];
 
         try {
-            const history = localStorage.getItem('vetscribe-endpoint-history');
+            const history = localStorage.getItem('openvetai-endpoint-history');
             if (history) {
                 const parsed = JSON.parse(history);
                 endpoints.push(...parsed.filter(ep => ep.startsWith('http')));
@@ -286,7 +286,7 @@ const LLMConnector = {
      */
     saveEndpointToHistory(endpoint) {
         try {
-            const history = JSON.parse(localStorage.getItem('vetscribe-endpoint-history') || '[]');
+            const history = JSON.parse(localStorage.getItem('openvetai-endpoint-history') || '[]');
 
             // Add to front of history if not already there
             if (!history.includes(endpoint)) {
@@ -295,7 +295,7 @@ const LLMConnector = {
                 // Keep only last 10 endpoints
                 history.splice(10);
 
-                localStorage.setItem('vetscribe-endpoint-history', JSON.stringify(history));
+                localStorage.setItem('openvetai-endpoint-history', JSON.stringify(history));
                 console.log('📚 Saved endpoint to history:', endpoint);
             }
         } catch (error) {
@@ -307,7 +307,7 @@ const LLMConnector = {
      * Enhanced auto-discovery with parallel testing and progress reporting
      */
     async autoDiscoverEndpoint(options = {}) {
-        console.log('🔍 Auto-discovering LM Studio endpoint...');
+        console.log('🔍 Auto-discovering Ollama endpoint...');
 
         const {
             maxConcurrent = 5,
@@ -355,7 +355,7 @@ const LLMConnector = {
             return result;
         }
 
-        throw new Error('No working LM Studio endpoints found on network');
+        throw new Error('No working Ollama endpoints found on network');
     },
 
     /**

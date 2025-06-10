@@ -1,18 +1,18 @@
-# VetScribe Deployment Guide
+# OpenVetAI Deployment Guide
 
 ## 🚀 Quick Deployment with GitHub Pages (Recommended)
 
 ### Prerequisites
 - GitHub account (free at [github.com](https://github.com))
-- All VetScribe files downloaded/cloned
+- All OpenVetAI files downloaded/cloned
 
 ### Step-by-Step Deployment
 
 #### 1. Create GitHub Repository
 1. Go to [github.com](https://github.com) and sign in
 2. Click the **"+"** button in top right → **"New repository"**
-3. Repository name: `vetscribe`
-4. Description: `VetScribe - Voice-to-SOAP Notes for Veterinary Practice`
+3. Repository name: `openvetai`
+4. Description: `OpenVetAI - Voice-to-SOAP Notes for Veterinary Practice`
 5. Make it **Public** (required for free GitHub Pages)
 6. Check **"Add a README file"**
 7. Click **"Create repository"**
@@ -109,13 +109,13 @@ Your VetScribe app is now live and accessible worldwide at your GitHub Pages URL
 ### How Veterinarians Access VetScribe:
 
 #### First Time Setup:
-1. **Visit your VetScribe URL** (e.g., `https://yourusername.github.io/vetscribe`)
+1. **Visit your OpenVetAI URL** (e.g., `https://yourusername.github.io/openvetai`)
 2. **Bookmark the page** for easy access
-3. **Set up LM Studio connection** (one-time):
-   - Install LM Studio on their computer
-   - Download a model (recommended: Llama 3.1 8B)
-   - Start the server in LM Studio
-   - Click "Test Connection" in VetScribe settings
+3. **Set up Ollama connection** (one-time):
+   - Install Ollama on their computer
+   - Download a model (recommended: llama3.2:1b for speed or llama3.1:8b for quality)
+   - Start the server: `ollama serve`
+   - Click "Test Connection" in OpenVetAI settings
 4. **Start using immediately!**
 
 #### Daily Use:

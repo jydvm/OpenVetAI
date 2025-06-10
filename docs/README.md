@@ -19,7 +19,7 @@ Welcome to OpenVetAI - your open-source AI-powered SOAP note generator! This doc
 
 ### **Step 1: Home PC Setup (15 minutes)**
 - [ ] Download and install Ollama
-- [ ] Download Mistral 7B model (recommended): `ollama pull mistral:7b`
+- [ ] Download recommended model: `ollama pull llama3.2:1b` (fast) or `ollama pull llama3.1:8b` (better quality)
 - [ ] Configure Ollama for network access: `OLLAMA_HOST=0.0.0.0:11434`
 - [ ] Test local connection
 
@@ -29,9 +29,9 @@ Welcome to OpenVetAI - your open-source AI-powered SOAP note generator! This doc
 - [ ] Note your Tailscale IP address
 - [ ] Test remote connection
 
-### **Step 3: VetScribe Configuration (5 minutes)**
-- [ ] Open VetScribe in browser
-- [ ] Configure LLM endpoint in Settings
+### **Step 3: OpenVetAI Configuration (5 minutes)**
+- [ ] Open OpenVetAI in browser
+- [ ] Configure Ollama endpoint in Settings
 - [ ] Test connection (should be green ✅)
 - [ ] Record test SOAP note
 
@@ -46,7 +46,7 @@ Welcome to OpenVetAI - your open-source AI-powered SOAP note generator! This doc
 
 ### **Daily Workflow:**
 1. **Start consultation** → Click Record
-2. **Speak normally** → VetScribe transcribes everything
+2. **Speak normally** → OpenVetAI transcribes everything
 3. **End consultation** → Click Stop
 4. **Generate notes** → Click Generate SOAP Notes
 5. **Copy & paste** → Into your practice management system
@@ -180,6 +180,6 @@ Welcome to OpenVetAI - your open-source AI-powered SOAP note generator! This doc
 
 ---
 
-**Welcome to the future of veterinary documentation!** VetScribe transforms how you create medical records, giving you more time for what matters most - caring for animals and their families.
+**Welcome to the future of veterinary documentation!** OpenVetAI transforms how you create medical records, giving you more time for what matters most - caring for animals and their families.
 
 **Questions?** Check the troubleshooting guide or review the specific setup guides for detailed instructions.

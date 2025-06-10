@@ -63,20 +63,24 @@ Should show version information.
 
 ## 🤖 **Step 2: Download AI Model**
 
-### **Download Mistral-7B (Recommended for Veterinary Use):**
+### **Download Recommended Models:**
 ```bash
-ollama pull mistral:7b
+# Fast model for tablets/slower devices (1.3GB)
+ollama pull llama3.2:1b
+
+# Better quality model for powerful PCs (4.7GB)
+ollama pull llama3.1:8b
 ```
 
-**This will download ~4GB** - perfect balance of speed and quality for SOAP notes.
+**Choose based on your hardware** - llama3.2:1b for speed, llama3.1:8b for quality.
 
 ### **Alternative Models:**
 ```bash
-# Faster, smaller model (good for slower PCs)
+# Very fast, tiny model (good for very slow devices)
 ollama pull phi3:mini
 
-# Larger, more capable model (if you have powerful hardware)
-ollama pull llama3:8b
+# Experimental larger model (if you have very powerful hardware)
+ollama pull llama3.1:70b
 ```
 
 ### **Verify Model Download:**
@@ -224,7 +228,7 @@ Go to: `https://jydvm.github.io/OpenVetAI/`
 
 ### **"Model Not Found" Error:**
 - **List installed models:** `ollama list`
-- **Download model if missing:** `ollama pull mistral:7b`
+- **Download model if missing:** `ollama pull llama3.2:1b`
 - **Use exact model name** from the list
 
 ### **Slow Performance:**
@@ -246,7 +250,7 @@ Go to: `https://jydvm.github.io/OpenVetAI/`
 - **Ensure adequate RAM** (16GB+ recommended)
 
 ### **For Better Quality:**
-- **Use llama3:8b** for more detailed notes
+- **Use llama3.1:8b** for more detailed notes
 - **Speak clearly** during recording
 - **Include specific details** in your narration
 
@@ -256,7 +260,7 @@ Go to: `https://jydvm.github.io/OpenVetAI/`
 Create a Modelfile for veterinary-specific settings:
 ```bash
 # Create custom model
-ollama create vet-mistral -f Modelfile
+ollama create vet-llama -f Modelfile
 ```
 
 ### **Automatic Startup (Windows):**

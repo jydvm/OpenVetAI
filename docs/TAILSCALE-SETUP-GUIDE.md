@@ -86,12 +86,12 @@ On your home PC:
 2. **Click "Copy my IP"** or "Admin console"
 3. **Note the IP** (starts with 100.x.x.x)
 
-### **Configure VetScribe:**
+### **Configure OpenVetAI:**
 On your clinic device:
-1. **Open VetScribe** in browser
+1. **Open OpenVetAI** in browser
 2. **Go to Settings tab**
-3. **Enter LLM Endpoint:** `http://[TAILSCALE-IP]:1234/v1`
-   - Example: `http://100.64.1.23:1234/v1`
+3. **Enter Ollama Endpoint:** `http://[TAILSCALE-IP]:11434`
+   - Example: `http://100.64.1.23:11434`
 4. **Click "Test Connection"**
 5. **Should show:** "✅ Connection successful"
 

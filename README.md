@@ -48,7 +48,7 @@ cd vetscribe
 ### 1. Ollama Setup
 
 1. Download and install [Ollama](https://ollama.ai/)
-2. Download a recommended model: `ollama pull mistral:7b`
+2. Download a recommended model: `ollama pull llama3.2:1b` (fast) or `ollama pull llama3.1:8b` (better quality)
 3. Configure for network access: Set `OLLAMA_HOST=0.0.0.0:11434`
 4. Start the server: `ollama serve`
 5. Note the server URL (typically `http://localhost:11434`)

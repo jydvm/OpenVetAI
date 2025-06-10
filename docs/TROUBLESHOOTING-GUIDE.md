@@ -19,8 +19,8 @@ This guide solves **90% of common OpenVetAI issues** in under 5 minutes. Perfect
 4. **Restart browser** completely
 
 ### **"SOAP notes won't generate"**
-1. **Check LM Studio connection** in Settings
-2. **Verify AI model is loaded** in LM Studio
+1. **Check Ollama connection** in Settings
+2. **Verify AI model is loaded** in Ollama
 3. **Test connection** button should be green
 4. **Try recording a shorter test** first
 
@@ -40,9 +40,9 @@ This guide solves **90% of common OpenVetAI issues** in under 5 minutes. Perfect
    - Should show "Listening on 0.0.0.0:11434"
 
 2. **Verify endpoint URL:**
-   - Local use: `http://localhost:11434/v1`
-   - Remote use: `http://[YOUR-IP]:11434/v1`
-   - Tailscale: `http://[TAILSCALE-IP]:11434/v1`
+   - Local use: `http://localhost:11434`
+   - Remote use: `http://[YOUR-IP]:11434`
+   - Tailscale: `http://[TAILSCALE-IP]:11434`
 
 3. **Test in browser first:**
    - Go to: `http://[YOUR-ENDPOINT]/api/tags`
@@ -126,8 +126,8 @@ This guide solves **90% of common OpenVetAI issues** in under 5 minutes. Perfect
 4. **Include more detail** when speaking
 
 #### **AI Model Issues:**
-1. **Check which model** you're using in LM Studio
-2. **Try Llama 3.1 8B** for better quality
+1. **Check which model** you're using in Ollama
+2. **Try llama3.1:8b** for better quality or **llama3.2:1b** for speed
 3. **Adjust temperature** to 0.3 for more consistency
 4. **Verify model is fully loaded**
 
@@ -225,7 +225,7 @@ This guide solves **90% of common OpenVetAI issues** in under 5 minutes. Perfect
 4. **Check for driver updates**
 
 ### **"Performance degraded over time"**
-1. **Restart LM Studio** regularly
+1. **Restart Ollama** regularly
 2. **Clear browser cache** weekly
 3. **Check available disk space**
 4. **Monitor system resources**
@@ -252,7 +252,7 @@ checkSecurityStatus()
 
 ### **Manual Tests:**
 1. **Test microphone:** Record in other apps
-2. **Test LM Studio:** Visit `http://localhost:1234/v1/models`
+2. **Test Ollama:** Visit `http://localhost:11434/api/tags`
 3. **Test network:** Ping home PC from clinic
 4. **Test browser:** Try different browser/device
 
