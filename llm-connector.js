@@ -525,7 +525,7 @@ const LLMConnector = {
             console.log('Ollama API failed, trying OpenAI format...');
         }
 
-        // Fallback to OpenAI format (LM Studio)
+        // Fallback to OpenAI format (legacy LM Studio compatibility)
         const response = await fetch(`${endpoint}/v1/models`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
@@ -1065,19 +1065,19 @@ const LLMConnector = {
         }
 
         if (diagnostics.tests.currentEndpoint?.error) {
-            recommendations.push('Current endpoint not responding - check LM Studio is running');
+            recommendations.push('Current endpoint not responding - check Ollama is running');
         }
 
         if (diagnostics.tests.discovery?.working === 0) {
-            recommendations.push('No working endpoints found - ensure LM Studio is accessible on network');
+            recommendations.push('No working endpoints found - ensure Ollama is accessible on network');
         }
 
         if (diagnostics.tests.models?.count === 0) {
-            recommendations.push('No models loaded in LM Studio - load a model to generate SOAP notes');
+            recommendations.push('No models loaded in Ollama - download a model to generate SOAP notes');
         }
 
         if (diagnostics.tests.currentEndpoint?.responseTime > 5000) {
-            recommendations.push('Slow response time - check network connection or LM Studio performance');
+            recommendations.push('Slow response time - check network connection or Ollama performance');
         }
 
         if (recommendations.length === 0) {
@@ -1154,7 +1154,7 @@ const LLMConnector = {
                     throw new Error('Ollama API failed');
                 }
             } catch (error) {
-                // Fallback to OpenAI format (LM Studio)
+                // Fallback to OpenAI format (legacy LM Studio compatibility)
                 try {
                     response = await fetch(`${endpoint}/v1/models`, {
                         method: 'GET',
@@ -1204,16 +1204,16 @@ const LLMConnector = {
                 throw new Error('No endpoint configured');
             }
             
-            console.log('🧪 Testing LM Studio connection...');
+            console.log('🧪 Testing Ollama connection...');
             
             const isWorking = await this.testEndpoint(this.currentEndpoint);
             
             if (isWorking) {
                 this.isConnected = true;
-                console.log('✅ LM Studio connection successful');
-                
+                console.log('✅ Ollama connection successful');
+
                 if (this.onConnectionChange) {
-                    this.onConnectionChange(true, 'Connected to LM Studio');
+                    this.onConnectionChange(true, 'Connected to Ollama');
                 }
                 
                 return true;
@@ -1223,7 +1223,7 @@ const LLMConnector = {
             
         } catch (error) {
             this.isConnected = false;
-            console.error('❌ LM Studio connection failed:', error);
+            console.error('❌ Ollama connection failed:', error);
             
             if (this.onConnectionChange) {
                 this.onConnectionChange(false, error.message);
@@ -1244,7 +1244,7 @@ const LLMConnector = {
     },
 
     /**
-     * Get available models from LM Studio
+     * Get available models from Ollama
      */
     async getAvailableModels() {
         try {
@@ -1614,7 +1614,7 @@ SOAP NOTES:`;
         }
 
         // If we have a configured default model, use it
-        if (this.config.defaultModel && this.config.defaultModel !== 'local-model') {
+        if (this.config.defaultModel && this.config.defaultModel !== 'local-model' && this.config.defaultModel !== 'mistral:7b') {
             return this.config.defaultModel;
         }
 
@@ -1630,8 +1630,8 @@ SOAP NOTES:`;
             console.warn('⚠️ Could not get available models:', error.message);
         }
 
-        // Fallback to common Ollama model names
-        return 'llama3.1:8b';
+        // Fallback to common Ollama model names (prefer faster model for better compatibility)
+        return 'llama3.2:1b';
     },
 
     /**
@@ -1771,7 +1771,7 @@ Remember: These notes will be used for patient care and medical records.`;
             monitor.progressCallback({
                 stage: 'request_started',
                 requestId,
-                message: 'Sending request to LM Studio...'
+                message: 'Sending request to Ollama...'
             });
         }
 
@@ -1789,7 +1789,7 @@ Remember: These notes will be used for patient care and medical records.`;
             progressCallback({
                 stage: 'request_sending',
                 requestId,
-                message: 'Connecting to LM Studio...'
+                message: 'Connecting to Ollama...'
             });
         }
 
@@ -1822,7 +1822,7 @@ Remember: These notes will be used for patient care and medical records.`;
                 throw new Error('Ollama API failed');
             }
         } catch (error) {
-            // Fallback to OpenAI format (LM Studio)
+            // Fallback to OpenAI format (legacy LM Studio compatibility)
             response = await fetch(`${this.currentEndpoint}/v1/chat/completions`, {
                 method: 'POST',
                 headers: {
@@ -1870,7 +1870,7 @@ Remember: These notes will be used for patient care and medical records.`;
         // Extract and validate content
         const content = this.extractContent(data);
         if (!content || content.trim().length === 0) {
-            throw new Error('LM Studio returned empty response content');
+            throw new Error('AI service returned empty response content');
         }
 
         // Create enhanced response object
@@ -1914,7 +1914,7 @@ Remember: These notes will be used for patient care and medical records.`;
         try {
             return await response.json();
         } catch (error) {
-            throw new Error(`Invalid JSON response from LM Studio: ${error.message}`);
+            throw new Error(`Invalid JSON response from AI service: ${error.message}`);
         }
     },
 
@@ -1934,7 +1934,7 @@ Remember: These notes will be used for patient care and medical records.`;
             return; // Valid Ollama response
         }
 
-        // Handle OpenAI/LM Studio response format
+        // Handle OpenAI/legacy LM Studio response format
         if (!data.choices || !Array.isArray(data.choices) || data.choices.length === 0) {
             throw new Error('Invalid response structure: missing choices array');
         }
@@ -1953,7 +1953,7 @@ Remember: These notes will be used for patient care and medical records.`;
             return data.response;
         }
 
-        // Handle OpenAI/LM Studio response format
+        // Handle OpenAI/legacy LM Studio response format
         if (data.choices && data.choices[0] && data.choices[0].message) {
             return data.choices[0].message.content;
         }
@@ -1993,7 +1993,7 @@ Remember: These notes will be used for patient care and medical records.`;
 
         for (const pattern of errorPatterns) {
             if (pattern.test(content)) {
-                throw new Error(`LM Studio declined to generate content: ${content.substring(0, 100)}...`);
+                throw new Error(`AI service declined to generate content: ${content.substring(0, 100)}...`);
             }
         }
 
@@ -2013,32 +2013,32 @@ Remember: These notes will be used for patient care and medical records.`;
 
         switch (status) {
             case 400:
-                message = 'Bad request to LM Studio';
+                message = 'Bad request to AI service';
                 userAction = 'Check your request parameters and try again.';
                 break;
             case 401:
-                message = 'Unauthorized access to LM Studio';
-                userAction = 'Check if LM Studio requires authentication.';
+                message = 'Unauthorized access to AI service';
+                userAction = 'Check if authentication is required.';
                 break;
             case 404:
-                message = 'LM Studio endpoint not found';
-                userAction = 'Verify LM Studio is running and the endpoint is correct.';
+                message = 'AI service endpoint not found';
+                userAction = 'Verify Ollama is running and the endpoint is correct.';
                 break;
             case 429:
-                message = 'Too many requests to LM Studio';
+                message = 'Too many requests to AI service';
                 userAction = 'Wait a moment and try again.';
                 break;
             case 500:
-                message = 'LM Studio server error';
-                userAction = 'Check LM Studio logs and ensure the model is loaded properly.';
+                message = 'AI service server error';
+                userAction = 'Check Ollama logs and ensure the model is loaded properly.';
                 break;
             case 503:
-                message = 'LM Studio service unavailable';
-                userAction = 'LM Studio may be overloaded. Try again in a moment.';
+                message = 'AI service unavailable';
+                userAction = 'Ollama may be overloaded. Try again in a moment.';
                 break;
             default:
-                message = `LM Studio returned status ${status}`;
-                userAction = 'Check LM Studio status and try again.';
+                message = `AI service returned status ${status}`;
+                userAction = 'Check Ollama status and try again.';
         }
 
         const error = new Error(`${message}: ${errorText}`);
@@ -2062,40 +2062,40 @@ Remember: These notes will be used for patient care and medical records.`;
         // Determine error category and add recovery suggestions
         if (error.name === 'AbortError') {
             error.category = 'timeout';
-            error.userAction = 'Request timed out. Try increasing timeout or check if LM Studio is processing a large request.';
+            error.userAction = 'Request timed out. Try increasing timeout or check if Ollama is processing a large request.';
             error.recoverySuggestions = [
                 'Increase timeout in settings',
-                'Check LM Studio performance',
-                'Try a smaller model',
+                'Check Ollama performance',
+                'Try a smaller/faster model (llama3.2:1b)',
                 'Reduce max_tokens parameter'
             ];
         } else if (error.message.includes('fetch')) {
             error.category = 'network';
-            error.userAction = 'Network connection failed. Check if LM Studio is running and accessible.';
+            error.userAction = 'Network connection failed. Check if Ollama is running and accessible.';
             error.recoverySuggestions = [
-                'Verify LM Studio is running',
+                'Verify Ollama is running: ollama serve',
                 'Check network connectivity',
                 'Test endpoint in browser',
-                'Restart LM Studio server'
+                'Restart Ollama server'
             ];
         } else if (error.isHTTPError) {
             error.category = 'http';
             // userAction already set in createHTTPError
         } else if (error.message.includes('JSON')) {
             error.category = 'parsing';
-            error.userAction = 'Invalid response format from LM Studio.';
+            error.userAction = 'Invalid response format from AI service.';
             error.recoverySuggestions = [
-                'Check LM Studio model compatibility',
+                'Check Ollama model compatibility',
                 'Verify API endpoint configuration',
-                'Try restarting LM Studio'
+                'Try restarting Ollama'
             ];
         } else {
             error.category = 'unknown';
-            error.userAction = 'An unexpected error occurred. Check LM Studio status.';
+            error.userAction = 'An unexpected error occurred. Check Ollama status.';
             error.recoverySuggestions = [
-                'Check LM Studio logs',
-                'Verify model is loaded',
-                'Restart LM Studio',
+                'Check Ollama logs',
+                'Verify model is loaded: ollama list',
+                'Restart Ollama: ollama serve',
                 'Check system resources'
             ];
         }
@@ -2277,11 +2277,11 @@ Remember: These notes will be used for patient care and medical records.`;
         error.isRetryError = true;
         error.category = 'retry_exhausted';
 
-        error.userAction = 'All retry attempts failed. Check LM Studio connection and try again.';
+        error.userAction = 'All retry attempts failed. Check Ollama connection and try again.';
         error.recoverySuggestions = [
-            'Verify LM Studio is running and accessible',
+            'Verify Ollama is running: ollama serve',
             'Check network connectivity',
-            'Restart LM Studio server',
+            'Restart Ollama server',
             'Try manual connection test',
             'Check system resources and performance'
         ];
@@ -2383,7 +2383,7 @@ Remember: These notes will be used for patient care and medical records.`;
         this.discoveredEndpoints = [];
 
         // Clear saved configuration
-        localStorage.removeItem('vetscribe-llm-config');
+        localStorage.removeItem('openvetai-llm-config');
 
         // Re-discover endpoints
         await this.discoverTailscaleEndpoints();

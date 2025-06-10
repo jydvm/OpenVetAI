@@ -2947,27 +2947,27 @@ async function testLLMConnection() {
  */
 async function autoDiscoverLLMEndpoint() {
     try {
-        console.log('🔍 Auto-discovering LM Studio endpoint...');
+        console.log('🔍 Auto-discovering Ollama endpoint...');
 
         if (typeof LLMConnector === 'undefined') {
             throw new Error('LLM Connector not available');
         }
 
-        showLoading('Discovering LM Studio on Tailscale...');
+        showLoading('Discovering Ollama on Tailscale...');
 
         const endpoint = await LLMConnector.autoDiscoverEndpoint();
 
         hideLoading();
 
         if (endpoint) {
-            updateConnectionStatus('connected', `Found LM Studio at ${endpoint}`);
-            showSuccess(`LM Studio discovered at: ${endpoint}`);
+            updateConnectionStatus('connected', `Found Ollama at ${endpoint}`);
+            showSuccess(`Ollama discovered at: ${endpoint}`);
         }
 
         return endpoint;
 
     } catch (error) {
-        console.error('❌ LLM auto-discovery failed:', error);
+        console.error('❌ Ollama auto-discovery failed:', error);
 
         hideLoading();
         updateConnectionStatus('error', 'Auto-discovery failed');
