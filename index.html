@@ -21,15 +21,22 @@
     
     <!-- Main stylesheet -->
     <link rel="stylesheet" href="styles.css">
-    
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
     <!-- PWA meta tags for mobile app-like experience -->
     <meta name="theme-color" content="#2563eb">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="OpenVetAI">
-    
-    <!-- Favicon -->
+
+    <!-- PWA Icons -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-192x192.png">
 </head>
 <body>
     <!-- Skip link for accessibility -->
@@ -187,7 +194,7 @@ PLAN:
                             <h4>LLM Connection</h4>
                             <div class="setting-item">
                                 <label for="llmEndpoint">Ollama Endpoint:</label>
-                                <input type="url" id="llmEndpoint" placeholder="http://100.x.x.x:11434/v1" class="setting-input">
+                                <input type="url" id="llmEndpoint" placeholder="http://100.x.x.x:11434" class="setting-input">
                                 <button class="test-connection-button" id="testConnectionButton">Test Connection</button>
                             </div>
                         </div>
@@ -246,5 +253,84 @@ PLAN:
     <script src="security-test-suite.js"></script>
     <script src="error-handler.js"></script>
     <script src="app.js"></script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        // Register service worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', async () => {
+                try {
+                    const registration = await navigator.serviceWorker.register('/sw.js');
+                    console.log('✅ Service Worker registered successfully:', registration.scope);
+
+                    // Check for updates
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                console.log('🔄 New version available! Refresh to update.');
+                                // Could show update notification here
+                            }
+                        });
+                    });
+
+                } catch (error) {
+                    console.error('❌ Service Worker registration failed:', error);
+                }
+            });
+        }
+
+        // PWA install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('💾 PWA install prompt available');
+            e.preventDefault();
+            deferredPrompt = e;
+
+            // Show custom install button/banner
+            showInstallPrompt();
+        });
+
+        function showInstallPrompt() {
+            // Create install banner if not already shown
+            if (!document.getElementById('installBanner')) {
+                const banner = document.createElement('div');
+                banner.id = 'installBanner';
+                banner.className = 'install-banner';
+                banner.innerHTML = `
+                    <div class="install-content">
+                        <span class="install-icon">📱</span>
+                        <span class="install-text">Install OpenVetAI for better performance</span>
+                        <button class="install-button" onclick="installPWA()">Install</button>
+                        <button class="install-close" onclick="dismissInstall()">×</button>
+                    </div>
+                `;
+                document.body.appendChild(banner);
+            }
+        }
+
+        async function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log('PWA install outcome:', outcome);
+                deferredPrompt = null;
+                dismissInstall();
+            }
+        }
+
+        function dismissInstall() {
+            const banner = document.getElementById('installBanner');
+            if (banner) {
+                banner.remove();
+            }
+        }
+
+        // Handle PWA installation
+        window.addEventListener('appinstalled', () => {
+            console.log('🎉 PWA installed successfully!');
+            dismissInstall();
+        });
+    </script>
 </body>
 </html>

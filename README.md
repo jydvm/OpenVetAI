@@ -1,8 +1,10 @@
-# OpenVetAI 🤖
+# OpenVetAI 🤖 (Progressive Web App)
 
 **Open-Source AI-Powered SOAP Note Generator for Veterinary Practices**
 
 Transform your spoken consultations into professional SOAP notes automatically using advanced AI. Built specifically for veterinarians who want to spend more time with patients and less time typing.
+
+> **📱 Now available as a Progressive Web App! Install directly from your browser for app-like experience with offline support and bypasses browser security restrictions.**
 
 ## 🎯 Features
 
@@ -42,6 +44,22 @@ cd vetscribe
 
 2. Open `index.html` in your browser (no build step required!)
    - Or use a local server: `python -m http.server 8000`
+
+## 📱 Progressive Web App (PWA) Installation
+
+### **Mobile/Tablet Installation (Recommended):**
+
+1. **Open in browser:** [https://jydvm.github.io/OpenVetAI/](https://jydvm.github.io/OpenVetAI/)
+2. **Install prompt appears:** Tap "Install" when banner shows
+3. **Alternative:** Browser menu → "Add to Home Screen" or "Install App"
+4. **Launch:** Tap OpenVetAI icon on home screen
+
+### **PWA Benefits:**
+- ✅ **Bypasses browser security restrictions** (no more HTTPS/HTTP issues)
+- ✅ **Works offline** for transcription and note review
+- ✅ **App-like experience** with full-screen interface
+- ✅ **No app store required** - install directly from browser
+- ✅ **Automatic updates** when you refresh
 
 ## 🔧 Setup Guide
 

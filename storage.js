@@ -1,18 +1,18 @@
 /**
- * VetScribe - Enhanced Storage Module
+ * OpenVetAI - Enhanced Storage Module
  * Comprehensive local storage for recordings, transcripts, SOAP notes, and metadata
  */
 
 const Storage = {
     // Storage keys and configuration
     keys: {
-        recordings: 'vetscribe-recordings',
-        transcripts: 'vetscribe-transcripts',
-        soapNotes: 'vetscribe-soap-notes',
-        sessions: 'vetscribe-sessions',
-        settings: 'vetscribe-settings',
-        metadata: 'vetscribe-metadata',
-        cache: 'vetscribe-cache'
+        recordings: 'openvetai-recordings',
+        transcripts: 'openvetai-transcripts',
+        soapNotes: 'openvetai-soap-notes',
+        sessions: 'openvetai-sessions',
+        settings: 'openvetai-settings',
+        metadata: 'openvetai-metadata',
+        cache: 'openvetai-cache'
     },
     
     // Storage limits and configuration

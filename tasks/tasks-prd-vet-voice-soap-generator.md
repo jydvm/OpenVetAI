@@ -7,7 +7,7 @@
 - `app.js` - Main JavaScript file containing application logic and UI interactions
 - `audio-recorder.js` - Module for handling voice recording using Web Audio API
 - `transcription.js` - Module for converting audio to text
-- `llm-connector.js` - Module for connecting to LM Studio via Tailscale and communicating with local LLMs
+- `llm-connector.js` - Module for connecting to Ollama via Tailscale and communicating with local LLMs
 - `soap-generator.js` - Module for processing transcripts and generating SOAP notes
 - `storage.js` - Module for local storage of transcripts and SOAP notes
 - `utils.js` - Utility functions for file export, encryption, and general helpers
