@@ -3,12 +3,12 @@
   "short_name": "OpenVetAI",
   "description": "Voice-to-SOAP note generation for veterinary professionals. Record consultations and generate professional SOAP notes using local AI.",
   "version": "2.0.0",
-  "start_url": "/",
+  "start_url": "/OpenVetAI/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#2563eb",
   "background_color": "#ffffff",
-  "scope": "/",
+  "scope": "/OpenVetAI/",
   "lang": "en-US",
   "categories": ["medical", "productivity", "business"],
   "screenshots": [
@@ -82,7 +82,7 @@
       "name": "Quick Record",
       "short_name": "Record",
       "description": "Start recording a consultation immediately",
-      "url": "/?action=record",
+      "url": "/OpenVetAI/?action=record",
       "icons": [
         {
           "src": "icons/record-shortcut.png",
@@ -95,7 +95,7 @@
       "name": "Recent Notes",
       "short_name": "Notes", 
       "description": "View recent SOAP notes",
-      "url": "/?action=notes",
+      "url": "/OpenVetAI/?action=notes",
       "icons": [
         {
           "src": "icons/notes-shortcut.png",
@@ -113,7 +113,7 @@
   "protocol_handlers": [
     {
       "protocol": "web+openvetai",
-      "url": "/?handler=%s"
+      "url": "/OpenVetAI/?handler=%s"
     }
   ]
 }
